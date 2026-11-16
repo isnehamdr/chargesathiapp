@@ -1,14 +1,15 @@
+import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, RefreshControl, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, RefreshControl, Text, TouchableOpacity, View } from 'react-native';
 import { api } from '../../lib/api';
 import { useAuth } from '../../lib/auth';
 import { C, s } from '../../lib/ui';
 
-function StationCard({ st }) {
+function StationCard({ st, onPress }) {
     const free = st.connectors.filter((c) => c.status === 'available').length;
 
     return (
-        <View style={s.card}>
+        <TouchableOpacity style={s.card} onPress={onPress} activeOpacity={0.7}>
             <Text style={{ fontSize: 16, fontWeight: '700', color: C.ink }}>{st.station_name}</Text>
             <Text style={{ color: 'rgba(11,26,22,0.55)', marginTop: 2 }}>
                 {st.address_line1}, {st.city}
@@ -24,12 +25,13 @@ function StationCard({ st }) {
             <Text style={{ color: 'rgba(11,26,22,0.5)', marginTop: 6, fontSize: 12 }}>
                 {[...new Set(st.connectors.map((c) => c.type))].join(' · ')}
             </Text>
-        </View>
+        </TouchableOpacity>
     );
 }
 
 export default function Stations() {
     const { token, user, logout } = useAuth();
+    const router = useRouter();
     const [stations, setStations] = useState([]);
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
@@ -64,7 +66,7 @@ export default function Stations() {
             contentContainerStyle={s.pad}
             data={stations}
             keyExtractor={(st) => String(st.id)}
-            renderItem={({ item }) => <StationCard st={item} />}
+            renderItem={({ item }) => <StationCard st={item} onPress={() => router.push(`/station/${item.id}`)} />}
             refreshControl={
                 <RefreshControl
                     refreshing={refreshing}
