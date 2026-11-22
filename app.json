@@ -23,18 +23,12 @@
       "output": "server",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": [
-      "expo-router",
-      [
-        "expo-splash-screen",
-        {
-          "backgroundColor": "#208AEF",
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
-        }
-      ],
-      "expo-secure-store"
-    ],
+    
+  "plugins": [
+  "expo-router",
+  ["expo-location", { "locationWhenInUsePermission": "ChargeSathi uses your location to show the nearest charging stations." }]
+]
+    ,
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
